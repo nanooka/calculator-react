@@ -1,9 +1,10 @@
-import { Dispatch, useReducer } from "react";
+import { useReducer } from "react";
 
 import DigitButton from "./DigitButton";
 import OperationButton from "./OperationButtons";
-import { CalculatorState, Evaluate } from "../types/types";
+import { CalculatorState, Evaluate, Dispatch } from "../types/types";
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const ACTIONS = {
   ADD_DIGIT: "add-digit",
   CHOOSE_OPERATION: "choose-operation",
@@ -14,6 +15,7 @@ export const ACTIONS = {
 
 function reducer(
   state: CalculatorState,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   { type, payload }: { type: string; payload?: any }
 ) {
   switch (type) {
@@ -136,10 +138,10 @@ function formatOperand(operand: string) {
 }
 
 export default function Calculator() {
-  const [{ currentOperand, previousOperand, operation }, dispatch]: [
-    CalculatorState,
-    Dispatch
-  ] = useReducer(reducer, {});
+  const [{ currentOperand, previousOperand, operation }, dispatch] = useReducer(
+    reducer,
+    {}
+  ) as [CalculatorState, Dispatch];
 
   return (
     <body>
@@ -150,17 +152,18 @@ export default function Calculator() {
       <div
         className="result"
         style={{
-          fontSize:
-            // currentOperand ?
-            currentOperand?.length > 35
-              ? "15px"
-              : currentOperand?.length > 10
-              ? "20px"
-              : "40px",
+          fontSize: !currentOperand
+            ? "40px"
+            : currentOperand?.length > 35
+            ? "15px"
+            : currentOperand?.length > 10
+            ? "20px"
+            : "40px",
         }}
       >
         <div className="previous">
-          {formatOperand(previousOperand)}
+          {!previousOperand ? null : formatOperand(previousOperand)}
+          {/* {formatOperand(previousOperand)} */}
           {operation}
         </div>
         <p>{!currentOperand ? 0 : formatOperand(currentOperand)}</p>
